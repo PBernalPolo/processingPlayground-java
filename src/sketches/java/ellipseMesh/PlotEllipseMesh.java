@@ -1,5 +1,9 @@
 package ellipseMesh;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import numericalLibrary.types.Vector3;
 import processing.core.PApplet;
 import processing.event.MouseEvent;
 
@@ -20,6 +24,8 @@ public class PlotEllipseMesh
     ////////////////////////////////////////////////////////////////
     // VARIABLES
     ////////////////////////////////////////////////////////////////
+    
+    Mesh mesh;
     
     /**
      * Zoom set with the mouse wheel.
@@ -69,6 +75,7 @@ public class PlotEllipseMesh
      */
     public void setup()
     {
+        this.generateMesh();
         // Initialize zoom variable.
         this.zoom = ( 1 << 8 );
     }
@@ -104,7 +111,9 @@ public class PlotEllipseMesh
         line( 0 , -100 , 0 , 0 , 100 , 0 );
         stroke( color(0,0,255) );
         line( 0 , 0 , -100 , 0 , 0 , 100 );
-        // Draw point cloud shape from first image.
+        
+        // Draw triangles
+        mesh.plot( this );
         
         popMatrix();
     }
@@ -126,6 +135,17 @@ public class PlotEllipseMesh
         }
     }
     
+    
+    private void generateMesh()
+    {
+        mesh = Mesh.icosahedron();
+        
+        mesh.subdivide( 3 );
+        for( Vector3 point : mesh.getPointList() ) {
+            Mesh.projectToSurfaceInplace( point );
+        }
+        
+    }
     
     
 }
